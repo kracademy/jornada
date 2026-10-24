@@ -2,7 +2,7 @@
 /* Jornada — fichaje personal (entrada, pausa, salida). Todo vive en este dispositivo (localStorage). */
 
 const KEY = 'jornada-v1';
-const VERSION = '1.0';
+const VERSION = '1.1';
 const MIN = 60000;
 
 /* ---------- textos (en català) ---------- */
@@ -24,7 +24,7 @@ const L = {
   install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els fitxatges hi queden desats.", dismiss: 'Entesos',
   week_n: 'Setmana {n}', total: 'Total', planned: 'Previstes', days_worked: 'Dies', worked: 'Treballades',
   share_report: "Compartir l'informe", no_work: 'Sense fitxatges', future: '—',
-  month_weeks: 'Setmanes', month_note: 'Cada setmana compta al mes on cau el seu dijous. Les hores extra es calculen per setmana, a partir de {h}.',
+  month_weeks: 'Setmanes',
   in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Nota', note_ph: 'Opcional, p. ex. muntatge al teatre',
   cancel: 'Cancel·lar', done: 'Fet', delete: 'Eliminar', day_total: 'Total del dia', next_day: '+1 dia', open_hint: 'Deixa-la buida si continues treballant',
   err_overlap: 'Hi ha trams que se solapen. Revisa les hores.', err_noend: "Falta l'hora de sortida d'un tram.", err_future: 'Un tram acaba més tard que ara.', err_open: "Només pot quedar obert l'últim tram d'avui.",
@@ -35,10 +35,10 @@ const L = {
   weekly_foot: "El que passi d'aquestes hores en una setmana (de dilluns a diumenge) compta com a hores extra.",
   backup: 'Còpia de seguretat', backup_export: 'Desar una còpia', backup_import: 'Restaurar una còpia',
   backup_last: 'Última còpia: {d}.', backup_none: 'Encara no hi ha cap còpia.',
-  backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive. Els fitxatges només viuen en aquest iPhone.",
+  backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive.",
   import_q: 'Restaurar aquesta còpia?', import_msg: 'Els {a} trams actuals se substituiran pels {b} de la còpia ({d}).', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
   data: 'Dades', erase: 'Esborrar tots els fitxatges', erase_q: 'Esborrar tots els fitxatges?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Fitxatges esborrats',
-  about: 'Jornada {v}. Sense comptes ni servidors, tot es queda al teu iPhone.',
+  about: 'Jornada {v}',
   today_word: 'avui', yesterday: 'ahir', days_ago: 'fa {n} dies',
   err_save: "No s'ha pogut desar. Fes una còpia de seguretat com més aviat millor.",
   saved: 'Desat', deleted: 'Tram eliminat',
@@ -86,11 +86,13 @@ function fmtHM(mins) {
 /** 270 → "4:30" */
 const fmtClock = mins => `${Math.floor(Math.max(0, mins) / 60)}:${pad(Math.max(0, Math.round(mins)) % 60)}`;
 
-function rangeLabel(mon) {
-  const sun = addDays(mon, 6);
-  if (mon.getMonth() === sun.getMonth()) return `${mon.getDate()}–${sun.getDate()} ${fmt({ month: 'short' }, sun).replace('.', '')}`;
-  return `${fmt({ day: 'numeric', month: 'short' }, mon).replace('.', '')} – ${fmt({ day: 'numeric', month: 'short' }, sun).replace('.', '')}`;
+/** "16–22 nov", "26 oct – 1 nov" */
+function spanLabel(a, b) {
+  const mo = d => fmt({ month: 'short' }, d).replace('.', '');
+  if (a.getMonth() === b.getMonth()) return `${a.getDate()}–${b.getDate()} ${mo(b)}`;
+  return `${a.getDate()} ${mo(a)} – ${b.getDate()} ${mo(b)}`;
 }
+const rangeLabel = mon => spanLabel(mon, addDays(mon, 6));
 function relDay(ms) {
   const diff = Math.round((sod(Date.now()) - sod(ms)) / 864e5);
   if (diff <= 0) return t('today_word');
@@ -151,8 +153,11 @@ function weeksOfMonth(y, m) {
     if (addDays(w, 3).getMonth() === m) out.push(w);
   }
   // la semana del día 1 puede caer en el mes anterior: si su jueves es de este mes ya está dentro
-  return out;
+  return out.filter(w => w >= firstMon());
 }
+/* las semanas anteriores al primer fichaje no existen para la app (ni previstas ni informes) */
+const firstMon = () => monday(db.entries.reduce((m, e) => Math.min(m, e.start), Date.now()));
+const monthRange = weeks => (weeks.length ? spanLabel(weeks[0], addDays(weeks[weeks.length - 1], 6)) : '');
 
 /* ---------- estado de la interfaz ---------- */
 
@@ -421,7 +426,7 @@ function viewWeek() {
     <div class="title-row">
       <h1>${esc(rangeLabel(mon))}</h1>
       <div class="nav">
-        <button class="icon-btn" data-week="-1" aria-label="‹">${ICON.chevL}</button>
+        <button class="icon-btn" data-week="-1" aria-label="‹"${+mon <= +firstMon() ? ' disabled' : ''}>${ICON.chevL}</button>
         <button class="icon-btn" data-week="1" aria-label="›"${isCurrent ? ' disabled' : ''}>${ICON.chevR}</button>
       </div>
     </div>
@@ -467,6 +472,7 @@ function viewMonth() {
   const cur = new Date(now);
   const isCurrent = y === cur.getFullYear() && m === cur.getMonth();
   const d = monthData(y, m, now);
+  const canPrev = weeksOfMonth(y, m - 1).length > 0;
   const rows = d.weeks.map(w => `
     <li><button class="row tap" data-goweek="${+w.mon}"${w.fut ? ' disabled' : ''}>
       <span class="row-main"><b>${t('week_n', { n: isoWeek(w.mon) })}</b><span class="sub">${esc(rangeLabel(w.mon))}</span></span>
@@ -476,11 +482,11 @@ function viewMonth() {
 
   return `
   <header class="top">
-    <p class="eyebrow">${y}</p>
+    <p class="eyebrow">${y}${d.weeks.length ? ` · ${esc(monthRange(d.weeks.map(w => w.mon)))}` : ''}</p>
     <div class="title-row">
       <h1>${esc(cap(fmt({ month: 'long' }, new Date(y, m, 1))))}</h1>
       <div class="nav">
-        <button class="icon-btn" data-month="-1" aria-label="‹">${ICON.chevL}</button>
+        <button class="icon-btn" data-month="-1" aria-label="‹"${canPrev ? '' : ' disabled'}>${ICON.chevL}</button>
         <button class="icon-btn" data-month="1" aria-label="›"${isCurrent ? ' disabled' : ''}>${ICON.chevR}</button>
       </div>
     </div>
@@ -497,7 +503,6 @@ function viewMonth() {
     <section>
       <div class="group-head"><h2>${t('month_weeks')}</h2></div>
       <ul class="list">${rows}</ul>
-      <p class="foot">${t('month_note', { h: fmtHM(db.settings.weekly) })}</p>
       <button class="btn-wide" data-share="month">${ICON.share}<span>${t('share_report')}</span></button>
     </section>
   </div>`;
@@ -662,7 +667,8 @@ function openDay(k) {
 function reportWeeks(scope) {
   if (scope === 'week') return { weeks: [ui.week], title: `${t('week_n', { n: isoWeek(ui.week) })} · ${rangeLabel(ui.week)} ${ui.week.getFullYear()}` };
   const { y, m } = ui.month;
-  return { weeks: weeksOfMonth(y, m).filter(w => w <= new Date()), title: cap(fmt({ month: 'long', year: 'numeric' }, new Date(y, m, 1))) };
+  const weeks = weeksOfMonth(y, m).filter(w => w <= new Date());
+  return { weeks, title: `${cap(fmt({ month: 'long', year: 'numeric' }, new Date(y, m, 1)))}${weeks.length ? ` · ${monthRange(weeks)}` : ''}` };
 }
 function who() {
   const s = db.settings;

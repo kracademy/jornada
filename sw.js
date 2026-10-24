@@ -1,5 +1,5 @@
 /* Service worker — funciona sin conexión y se actualiza en segundo plano */
-const CACHE = 'jornada-v1';
+const CACHE = 'jornada-v2';
 const ASSETS = [
   './',
   'index.html',
