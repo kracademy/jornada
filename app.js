@@ -2,7 +2,7 @@
 /* Jornada — fichaje personal (entrada, pausa, salida). Todo vive en este dispositivo (localStorage). */
 
 const KEY = 'jornada-v1';
-const VERSION = '1.1';
+const VERSION = '1.2';
 const MIN = 60000;
 
 /* ---------- textos (en català) ---------- */
@@ -16,14 +16,14 @@ const L = {
   in: 'Entrar', pause: 'Pausa', resume: 'Reprendre', out: 'Sortir',
   today_cap: 'Avui', week_cap: 'Aquesta setmana', of_h: 'de {h}',
   left: 'Falten', extra: 'Extra', complete: 'Completa',
-  tramos_today: "Trams d'avui", edit: 'Editar', add: 'Afegir', none_today: 'Encara no has fitxat avui.',
+  tramos_today: "Trams d'avui", edit: 'Editar', add: 'Afegir', none_today: 'Avui encara no hi ha cap horari.',
   now: 'ara', break_: 'Pausa', running: 'en curs',
   t_in: 'Entrada a les {t}', t_pause: 'Pausa a les {t}', t_resume: 'De tornada a les {t}', t_out: 'Sortida a les {t}', undo: 'Desfer',
   forgot: 'Portes {d} seguides. Et vas oblidar de sortir?', fix: 'Corregir',
   backup_nag: "Fa {n} dies de la teva última còpia de seguretat.", backup_never: 'Encara no has desat cap còpia de seguretat.', backup_do: 'Desar',
-  install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els fitxatges hi queden desats.", dismiss: 'Entesos',
+  install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els horaris hi queden desats.", dismiss: 'Entesos',
   week_n: 'Setmana {n}', total: 'Total', planned: 'Previstes', days_worked: 'Dies', worked: 'Treballades',
-  share_report: "Compartir l'informe", no_work: 'Sense fitxatges', future: '—',
+  share_report: "Compartir l'informe", no_work: 'Sense horaris', future: '—',
   month_weeks: 'Setmanes',
   in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Nota', note_ph: 'Opcional, p. ex. muntatge al teatre',
   cancel: 'Cancel·lar', done: 'Fet', delete: 'Eliminar', day_total: 'Total del dia', next_day: '+1 dia', open_hint: 'Deixa-la buida si continues treballant',
@@ -37,7 +37,7 @@ const L = {
   backup_last: 'Última còpia: {d}.', backup_none: 'Encara no hi ha cap còpia.',
   backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive.",
   import_q: 'Restaurar aquesta còpia?', import_msg: 'Els {a} trams actuals se substituiran pels {b} de la còpia ({d}).', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
-  data: 'Dades', erase: 'Esborrar tots els fitxatges', erase_q: 'Esborrar tots els fitxatges?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Fitxatges esborrats',
+  data: 'Dades', erase: 'Esborrar tots els horaris', erase_q: 'Esborrar tots els horaris?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Horaris esborrats',
   about: 'Jornada {v}',
   today_word: 'avui', yesterday: 'ahir', days_ago: 'fa {n} dies',
   err_save: "No s'ha pogut desar. Fes una còpia de seguretat com més aviat millor.",
@@ -345,10 +345,12 @@ function timeline(k, now) {
       if (gap > 0) html += `<li class="row gap"><i class="tl-dot hollow"></i><span class="row-main">${t('break_')}</span><span class="row-val">${fmtHM(gap)}</span></li>`;
     }
     const running = e.end == null;
-    html += `<li class="row${running ? ' running' : ''}" data-day="${k}">
+    html += `<li class="sw" data-id="${esc(e.id)}">
+      <button class="sw-del" data-swdel="${esc(e.id)}">${t('delete')}</button>
+      <div class="row sw-row${running ? ' running' : ''}" data-day="${k}">
       <i class="tl-dot"></i>
-      <span class="row-main tnum">${hhmm(e.start)} – ${running ? `<span class="c-accent">${t('now')}</span>` : hhmm(e.end)}${e.end && keyOf(e.end) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span>
-      <span class="row-val tnum">${fmtHM(minsOf(e, now))}</span></li>`;
+      <span class="row-main tnum">${hhmm(e.start)} – ${running ? `<span class="c-run">${t('now')}</span>` : hhmm(e.end)}${e.end && keyOf(e.end) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span>
+      <span class="row-val tnum">${fmtHM(minsOf(e, now))}</span></div></li>`;
   });
   if (db.pausedAt && status() === 'paused') {
     html += `<li class="row gap"><i class="tl-dot hollow pulse-o"></i><span class="row-main">${t('break_')} · ${t('running')}</span><span class="row-val tnum">${fmtHM(Math.floor(now / MIN) - Math.floor(db.pausedAt / MIN))}</span></li>`;
@@ -662,6 +664,82 @@ function openDay(k) {
   });
 }
 
+/* ---------- lliscar un tram cap a l'esquerra per eliminar-lo (com a iOS) ---------- */
+
+const SW = 88;
+const swipe = { el: null, open: null, x0: 0, y0: 0, x: 0, base: 0, lock: null, block: false };
+
+function swipeSet(row, x, anim) {
+  const li = row.parentElement;
+  row.style.transition = anim ? '' : 'none';
+  row.style.transform = x ? `translateX(${x}px)` : '';
+  // el botó vermell només ocupa el que s'ha destapat
+  li.classList.toggle('dragging', !anim);
+  li.style.setProperty('--sw', `${-x}px`);
+  li.classList.toggle('is-full', -x > row.offsetWidth * 0.55);
+}
+function swipeClose() {
+  if (swipe.open) swipeSet(swipe.open, 0, true);
+  swipe.open = null;
+}
+function blockClick() { swipe.block = true; setTimeout(() => { swipe.block = false; }, 400); }
+
+document.addEventListener('pointerdown', e => {
+  const row = e.target.closest('.sw-row');
+  if (swipe.open && row !== swipe.open && !e.target.closest('.sw-del')) { swipeClose(); blockClick(); return; }
+  if (!row) return;
+  Object.assign(swipe, { el: row, x0: e.clientX, y0: e.clientY, x: 0, lock: null, base: row === swipe.open ? -SW : 0 });
+});
+document.addEventListener('pointermove', e => {
+  const row = swipe.el;
+  if (!row) return;
+  const dx = e.clientX - swipe.x0, dy = e.clientY - swipe.y0;
+  if (!swipe.lock) {
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+    swipe.lock = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    if (swipe.lock === 'x') try { row.setPointerCapture(e.pointerId); } catch { /* sense captura */ }
+  }
+  if (swipe.lock !== 'x') return;
+  swipe.x = Math.min(0, swipe.base + dx);
+  const wasFull = row.parentElement.classList.contains('is-full');
+  swipeSet(row, swipe.x, false);
+  if (wasFull !== row.parentElement.classList.contains('is-full')) haptic();
+});
+function swipeEnd() {
+  const row = swipe.el;
+  swipe.el = null;
+  // tocar la fila oberta la tanca, sense obrir l'editor
+  if (row && !swipe.lock && row === swipe.open) { swipeClose(); blockClick(); return; }
+  if (!row || swipe.lock !== 'x') return;
+  blockClick();
+  if (row.parentElement.classList.contains('is-full')) return delEntry(row.parentElement.dataset.id);
+  const open = -swipe.x > SW / 2;
+  swipeSet(row, open ? -SW : 0, true);
+  swipe.open = open ? row : null;
+}
+document.addEventListener('pointerup', swipeEnd);
+document.addEventListener('pointercancel', swipeEnd);
+// el toc que acaba un lliscament no ha d'obrir l'editor
+document.addEventListener('click', e => {
+  if (swipe.block && !e.target.closest('.sw-del')) { e.stopPropagation(); e.preventDefault(); swipe.block = false; }
+}, true);
+
+function delEntry(id) {
+  const e = db.entries.find(x => x.id === id);
+  if (!e) return;
+  const before = JSON.stringify(db);
+  const li = $(`.sw[data-id="${CSS.escape(id)}"]`);
+  swipe.open = null;
+  if (li) swipeSet($('.sw-row', li), -li.offsetWidth, true);
+  db.entries = db.entries.filter(x => x !== e);
+  if (e.end == null) db.pausedAt = null;
+  else if (db.pausedAt) { const last = entriesOn(keyOf(db.pausedAt)).pop(); db.pausedAt = last && last.end != null ? last.end : null; }
+  save();
+  haptic();
+  setTimeout(render, li ? 220 : 0);
+  toast(t('deleted'), () => { db = normalize(JSON.parse(before)); save(); render(); });
+}
+
 /* ---------- informes ---------- */
 
 function reportWeeks(scope) {
@@ -911,6 +989,7 @@ document.addEventListener('click', e => {
   if (d.do === 'install-ok') { lsSet('jornada-install-ok', '1'); return render(); }
   if (d.do === 'backup') return backup();
   if (d.do === 'erase') return erase();
+  if (d.swdel) return delEntry(d.swdel);
   if (d.day && !el.closest('.layer')) return openDay(d.day);
 });
 
@@ -930,7 +1009,7 @@ document.addEventListener('keydown', e => {
 setInterval(() => {
   if ($('#layers').children.length && ui.tab !== 'today') return;
   const m = Math.floor(Date.now() / MIN);
-  if (m !== lastMinute) {
+  if (m !== lastMinute && !swipe.open && !swipe.el) {
     lastMinute = m;
     if (ui.tab !== 'settings' && !document.activeElement?.matches('input, select, textarea')) render();
   } else if (ui.tab === 'today') live();
