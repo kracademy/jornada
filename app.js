@@ -5,101 +5,50 @@ const KEY = 'jornada-v1';
 const VERSION = '1.0';
 const MIN = 60000;
 
-/* ---------- textos ---------- */
+/* ---------- textos (en català) ---------- */
 
-const I18N = {
-  es: {
-    locale: 'es-ES',
-    tab_today: 'Hoy', tab_week: 'Semana', tab_month: 'Mes', tab_settings: 'Ajustes',
-    hello: 'Hola, {n}', hello_anon: 'Jornada',
-    st_out: 'Fuera de jornada', st_in: 'Trabajando', st_paused: 'En pausa',
-    since: 'desde las {t}', last_out: 'Última salida {d} a las {t}', first_time: 'Pulsa Entrar cuando empieces',
-    in: 'Entrar', pause: 'Pausa', resume: 'Reanudar', out: 'Salir',
-    today_cap: 'Hoy', week_cap: 'Esta semana', of_h: 'de {h}',
-    left: 'Faltan', extra: 'Extra', complete: 'Completa',
-    tramos_today: 'Tramos de hoy', edit: 'Editar', add: 'Añadir', none_today: 'Todavía no has fichado hoy.',
-    now: 'ahora', break_: 'Pausa', running: 'en curso',
-    t_in: 'Entrada a las {t}', t_pause: 'Pausa a las {t}', t_resume: 'De vuelta a las {t}', t_out: 'Salida a las {t}', undo: 'Deshacer',
-    forgot: 'Llevas {d} seguidas. ¿Te olvidaste de salir?', fix: 'Corregir',
-    backup_nag: 'Hace {n} días de tu última copia de seguridad.', backup_never: 'Todavía no has guardado ninguna copia de seguridad.', backup_do: 'Guardar',
-    install_title: 'Añádela a la pantalla de inicio', install_text: 'Pulsa Compartir y luego «Añadir a pantalla de inicio». Así se abre como una app y los fichajes quedan guardados en ella.', dismiss: 'Entendido',
-    week_n: 'Semana {n}', total: 'Total', planned: 'Previstas', days_worked: 'Días', worked: 'Trabajadas',
-    share_report: 'Compartir informe', no_work: 'Sin fichajes', future: '—',
-    month_weeks: 'Semanas', month_note: 'Cada semana cuenta en el mes donde cae su jueves. Las horas extra se calculan por semana, a partir de {h}.',
-    in_short: 'Entrada', out_short: 'Salida', add_tramo: 'Añadir tramo', note: 'Nota', note_ph: 'Opcional, p. ej. montaje en el teatro',
-    cancel: 'Cancelar', done: 'Hecho', delete: 'Eliminar', day_total: 'Total del día', next_day: '+1 día', open_hint: 'Déjala vacía si sigues trabajando',
-    err_overlap: 'Hay tramos que se solapan. Revisa las horas.', err_noend: 'Falta la hora de salida de un tramo.', err_future: 'Un tramo acaba más tarde que ahora.', err_open: 'Solo puede quedar abierto el último tramo de hoy.',
-    rep_title: 'Registro horario', rep_week: 'Semana {n} · {r}', rep_week_tot: 'Total semana: {t}', rep_extra_w: 'extra {t}',
-    rep_total: 'Total: {t} de {p} previstas', rep_extra: 'Horas extra: {t}', rep_noextra: 'Sin horas extra',
-    sh_text: 'Enviar como texto', sh_csv: 'Exportar a Excel (CSV)', sh_copy: 'Copiar texto', copied: 'Texto copiado',
-    profile: 'Perfil', name: 'Nombre', company: 'Empresa', schedule: 'Jornada', weekly: 'Horas por semana',
-    weekly_foot: 'Lo que pase de estas horas en una semana (de lunes a domingo) cuenta como horas extra.',
-    language: 'Idioma', lang_auto: 'Automático',
-    backup: 'Copia de seguridad', backup_export: 'Guardar copia', backup_import: 'Restaurar una copia',
-    backup_last: 'Última copia: {d}.', backup_none: 'Todavía no hay ninguna copia.',
-    backup_foot: 'En el menú Compartir elige «Guardar en Archivos» y guárdala en iCloud Drive. Los fichajes solo viven en este iPhone.',
-    import_q: '¿Restaurar esta copia?', import_msg: 'Los {a} tramos actuales se sustituirán por los {b} de la copia ({d}).', import_ok: 'Copia restaurada', import_bad: 'Este archivo no es una copia de Jornada.', restore: 'Restaurar',
-    data: 'Datos', erase: 'Borrar todos los fichajes', erase_q: '¿Borrar todos los fichajes?', erase_msg: 'No se puede deshacer. Guarda antes una copia de seguridad.', erase_btn: 'Borrar', erased: 'Fichajes borrados',
-    about: 'Jornada {v}. Sin cuentas ni servidores, todo se queda en tu iPhone.',
-    today_word: 'hoy', yesterday: 'ayer', days_ago: 'hace {n} días',
-    err_save: 'No se ha podido guardar. Haz una copia de seguridad cuanto antes.',
-    saved: 'Guardado', deleted: 'Tramo eliminado',
-    csv_head: ['Fecha', 'Día', 'Semana', 'Entrada', 'Salida', 'Horas (h:mm)', 'Horas (decimal)', 'Nota'],
-    csv_weeks: 'Resumen por semanas', csv_week: 'Semana', csv_from: 'Del', csv_to: 'Al', csv_tot: 'Horas', csv_plan: 'Previstas', csv_ext: 'Extra',
-    wd_short: ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
-    h: 'h', min: 'min',
-  },
-  ca: {
-    locale: 'ca-ES',
-    tab_today: 'Avui', tab_week: 'Setmana', tab_month: 'Mes', tab_settings: 'Ajustos',
-    hello: 'Hola, {n}', hello_anon: 'Jornada',
-    st_out: 'Fora de jornada', st_in: 'Treballant', st_paused: 'En pausa',
-    since: 'des de les {t}', last_out: 'Última sortida {d} a les {t}', first_time: 'Prem Entrar quan comencis',
-    in: 'Entrar', pause: 'Pausa', resume: 'Reprendre', out: 'Sortir',
-    today_cap: 'Avui', week_cap: 'Aquesta setmana', of_h: 'de {h}',
-    left: 'Falten', extra: 'Extra', complete: 'Completa',
-    tramos_today: "Trams d'avui", edit: 'Editar', add: 'Afegir', none_today: 'Encara no has fitxat avui.',
-    now: 'ara', break_: 'Pausa', running: 'en curs',
-    t_in: 'Entrada a les {t}', t_pause: 'Pausa a les {t}', t_resume: 'De tornada a les {t}', t_out: 'Sortida a les {t}', undo: 'Desfer',
-    forgot: 'Portes {d} seguides. Et vas oblidar de sortir?', fix: 'Corregir',
-    backup_nag: "Fa {n} dies de la teva última còpia de seguretat.", backup_never: 'Encara no has desat cap còpia de seguretat.', backup_do: 'Desar',
-    install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els fitxatges hi queden desats.", dismiss: 'Entesos',
-    week_n: 'Setmana {n}', total: 'Total', planned: 'Previstes', days_worked: 'Dies', worked: 'Treballades',
-    share_report: "Compartir l'informe", no_work: 'Sense fitxatges', future: '—',
-    month_weeks: 'Setmanes', month_note: 'Cada setmana compta al mes on cau el seu dijous. Les hores extra es calculen per setmana, a partir de {h}.',
-    in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Nota', note_ph: 'Opcional, p. ex. muntatge al teatre',
-    cancel: 'Cancel·lar', done: 'Fet', delete: 'Eliminar', day_total: 'Total del dia', next_day: '+1 dia', open_hint: 'Deixa-la buida si continues treballant',
-    err_overlap: 'Hi ha trams que se solapen. Revisa les hores.', err_noend: "Falta l'hora de sortida d'un tram.", err_future: 'Un tram acaba més tard que ara.', err_open: "Només pot quedar obert l'últim tram d'avui.",
-    rep_title: 'Registre horari', rep_week: 'Setmana {n} · {r}', rep_week_tot: 'Total setmana: {t}', rep_extra_w: 'extra {t}',
-    rep_total: 'Total: {t} de {p} previstes', rep_extra: 'Hores extra: {t}', rep_noextra: 'Sense hores extra',
-    sh_text: 'Enviar com a text', sh_csv: 'Exportar a Excel (CSV)', sh_copy: 'Copiar el text', copied: 'Text copiat',
-    profile: 'Perfil', name: 'Nom', company: 'Empresa', schedule: 'Jornada', weekly: 'Hores per setmana',
-    weekly_foot: "El que passi d'aquestes hores en una setmana (de dilluns a diumenge) compta com a hores extra.",
-    language: 'Idioma', lang_auto: 'Automàtic',
-    backup: 'Còpia de seguretat', backup_export: 'Desar una còpia', backup_import: 'Restaurar una còpia',
-    backup_last: 'Última còpia: {d}.', backup_none: 'Encara no hi ha cap còpia.',
-    backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive. Els fitxatges només viuen en aquest iPhone.",
-    import_q: 'Restaurar aquesta còpia?', import_msg: 'Els {a} trams actuals se substituiran pels {b} de la còpia ({d}).', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
-    data: 'Dades', erase: 'Esborrar tots els fitxatges', erase_q: 'Esborrar tots els fitxatges?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Fitxatges esborrats',
-    about: 'Jornada {v}. Sense comptes ni servidors, tot es queda al teu iPhone.',
-    today_word: 'avui', yesterday: 'ahir', days_ago: 'fa {n} dies',
-    err_save: "No s'ha pogut desar. Fes una còpia de seguretat com més aviat millor.",
-    saved: 'Desat', deleted: 'Tram eliminat',
-    csv_head: ['Data', 'Dia', 'Setmana', 'Entrada', 'Sortida', 'Hores (h:mm)', 'Hores (decimal)', 'Nota'],
-    csv_weeks: 'Resum per setmanes', csv_week: 'Setmana', csv_from: 'Del', csv_to: 'Al', csv_tot: 'Hores', csv_plan: 'Previstes', csv_ext: 'Extra',
-    wd_short: ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg'],
-    h: 'h', min: 'min',
-  },
+const L = {
+  locale: 'ca-ES',
+  tab_today: 'Avui', tab_week: 'Setmana', tab_month: 'Mes', tab_settings: 'Ajustos',
+  hello: 'Hola, {n}', hello_anon: 'Jornada',
+  st_out: 'Fora de jornada', st_in: 'Treballant', st_paused: 'En pausa',
+  since: 'des de les {t}', last_out: 'Última sortida {d} a les {t}', first_time: 'Prem Entrar quan comencis',
+  in: 'Entrar', pause: 'Pausa', resume: 'Reprendre', out: 'Sortir',
+  today_cap: 'Avui', week_cap: 'Aquesta setmana', of_h: 'de {h}',
+  left: 'Falten', extra: 'Extra', complete: 'Completa',
+  tramos_today: "Trams d'avui", edit: 'Editar', add: 'Afegir', none_today: 'Encara no has fitxat avui.',
+  now: 'ara', break_: 'Pausa', running: 'en curs',
+  t_in: 'Entrada a les {t}', t_pause: 'Pausa a les {t}', t_resume: 'De tornada a les {t}', t_out: 'Sortida a les {t}', undo: 'Desfer',
+  forgot: 'Portes {d} seguides. Et vas oblidar de sortir?', fix: 'Corregir',
+  backup_nag: "Fa {n} dies de la teva última còpia de seguretat.", backup_never: 'Encara no has desat cap còpia de seguretat.', backup_do: 'Desar',
+  install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els fitxatges hi queden desats.", dismiss: 'Entesos',
+  week_n: 'Setmana {n}', total: 'Total', planned: 'Previstes', days_worked: 'Dies', worked: 'Treballades',
+  share_report: "Compartir l'informe", no_work: 'Sense fitxatges', future: '—',
+  month_weeks: 'Setmanes', month_note: 'Cada setmana compta al mes on cau el seu dijous. Les hores extra es calculen per setmana, a partir de {h}.',
+  in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Nota', note_ph: 'Opcional, p. ex. muntatge al teatre',
+  cancel: 'Cancel·lar', done: 'Fet', delete: 'Eliminar', day_total: 'Total del dia', next_day: '+1 dia', open_hint: 'Deixa-la buida si continues treballant',
+  err_overlap: 'Hi ha trams que se solapen. Revisa les hores.', err_noend: "Falta l'hora de sortida d'un tram.", err_future: 'Un tram acaba més tard que ara.', err_open: "Només pot quedar obert l'últim tram d'avui.",
+  rep_title: 'Registre horari', rep_week: 'Setmana {n} · {r}', rep_week_tot: 'Total setmana: {t}', rep_extra_w: 'extra {t}',
+  rep_total: 'Total: {t} de {p} previstes', rep_extra: 'Hores extra: {t}', rep_noextra: 'Sense hores extra',
+  sh_text: 'Enviar com a text', sh_csv: 'Exportar a Excel (CSV)', sh_copy: 'Copiar el text', copied: 'Text copiat',
+  profile: 'Perfil', name: 'Nom', company: 'Empresa', schedule: 'Jornada', weekly: 'Hores per setmana',
+  weekly_foot: "El que passi d'aquestes hores en una setmana (de dilluns a diumenge) compta com a hores extra.",
+  backup: 'Còpia de seguretat', backup_export: 'Desar una còpia', backup_import: 'Restaurar una còpia',
+  backup_last: 'Última còpia: {d}.', backup_none: 'Encara no hi ha cap còpia.',
+  backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive. Els fitxatges només viuen en aquest iPhone.",
+  import_q: 'Restaurar aquesta còpia?', import_msg: 'Els {a} trams actuals se substituiran pels {b} de la còpia ({d}).', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
+  data: 'Dades', erase: 'Esborrar tots els fitxatges', erase_q: 'Esborrar tots els fitxatges?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Fitxatges esborrats',
+  about: 'Jornada {v}. Sense comptes ni servidors, tot es queda al teu iPhone.',
+  today_word: 'avui', yesterday: 'ahir', days_ago: 'fa {n} dies',
+  err_save: "No s'ha pogut desar. Fes una còpia de seguretat com més aviat millor.",
+  saved: 'Desat', deleted: 'Tram eliminat',
+  csv_head: ['Data', 'Dia', 'Setmana', 'Entrada', 'Sortida', 'Hores (h:mm)', 'Hores (decimal)', 'Nota'],
+  csv_weeks: 'Resum per setmanes', csv_week: 'Setmana', csv_from: 'Del', csv_to: 'Al', csv_tot: 'Hores', csv_plan: 'Previstes', csv_ext: 'Extra',
+  chart_note: 'La línia blava marca {a} per dia, la mitjana per arribar a {w} en 5 dies. Cada barra són les hores fetes aquell dia.',
+  wd_short: ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg'],
+  h: 'h', min: 'min',
 };
 
-let L = I18N.es;
-function setLang() {
-  const pref = db.settings.lang;
-  const auto = (navigator.languages || [navigator.language || 'es']).some(l => /^ca\b/i.test(l)) ? 'ca' : 'es';
-  const code = pref === 'es' || pref === 'ca' ? pref : auto;
-  L = I18N[code];
-  document.documentElement.lang = code;
-}
 const t = (k, vars = {}) => String(L[k] ?? k).replace(/\{(\w+)\}/g, (_, v) => vars[v] ?? '');
 
 /* ---------- utilidades ---------- */
@@ -131,7 +80,7 @@ function fmtHM(mins) {
   mins = Math.max(0, Math.round(mins));
   const h = Math.floor(mins / 60), m = mins % 60;
   if (h && m) return `${h} ${L.h} ${m} ${L.min}`;
-  if (h || !m) return `${h} ${L.h}`;
+  if (h) return `${h} ${L.h}`;
   return `${m} ${L.min}`;
 }
 /** 270 → "4:30" */
@@ -151,7 +100,7 @@ function relDay(ms) {
 
 /* ---------- datos ---------- */
 
-const DEFAULTS = { v: 1, settings: { name: 'Marc', company: 'Milnotes', weekly: 20 * 60, lang: 'auto', lastBackup: null }, entries: [], notes: {}, pausedAt: null };
+const DEFAULTS = { v: 1, settings: { name: 'Marc', company: 'Milnotes', weekly: 20 * 60, lastBackup: null }, entries: [], notes: {}, pausedAt: null };
 
 function normalize(d) {
   if (!d || typeof d !== 'object' || !Array.isArray(d.entries)) return null;
@@ -259,7 +208,6 @@ const ICON = {
 /* ---------- render principal ---------- */
 
 function render() {
-  setLang();
   renderTabbar();
   const v = $('#view');
   v.className = 'view view-' + ui.tab + (ui.anim ? ' enter' : '');
@@ -361,12 +309,12 @@ function viewToday() {
         </div>
       </div>
       <div class="stats">
-        <div class="stat"><span class="cap"><i class="dot dot-green"></i>${t('week_cap')}</span><b>${fmtHM(wk)}</b><small>${t('of_h', { h: fmtHM(target) })}</small></div>
+        <div class="stat"><span class="cap"><i class="dot dot-ink"></i>${t('week_cap')}</span><b>${fmtHM(wk)}</b><small>${t('of_h', { h: fmtHM(target) })}</small></div>
         ${extra > 0
-          ? `<div class="stat"><span class="cap"><i class="dot dot-indigo"></i>${t('extra')}</span><b class="c-indigo">+${fmtHM(extra)}</b><small>${t('week_n', { n: isoWeek(now) })}</small></div>`
+          ? `<div class="stat"><span class="cap"><i class="dot dot-accent"></i>${t('extra')}</span><b class="c-accent">+${fmtHM(extra)}</b><small>${t('week_n', { n: isoWeek(now) })}</small></div>`
           : left > 0
             ? `<div class="stat"><span class="cap"><i class="dot dot-track"></i>${t('left')}</span><b>${fmtHM(left)}</b><small>${t('week_n', { n: isoWeek(now) })}</small></div>`
-            : `<div class="stat"><span class="cap"><i class="dot dot-green"></i>${t('complete')}</span><b class="c-green">✓</b><small>${t('week_n', { n: isoWeek(now) })}</small></div>`}
+            : `<div class="stat"><span class="cap"><i class="dot dot-ink"></i>${t('complete')}</span><b class="c-accent">✓</b><small>${t('week_n', { n: isoWeek(now) })}</small></div>`}
       </div>
     </section>
     <section class="control">
@@ -394,7 +342,7 @@ function timeline(k, now) {
     const running = e.end == null;
     html += `<li class="row${running ? ' running' : ''}" data-day="${k}">
       <i class="tl-dot"></i>
-      <span class="row-main tnum">${hhmm(e.start)} – ${running ? `<span class="c-green">${t('now')}</span>` : hhmm(e.end)}${e.end && keyOf(e.end) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span>
+      <span class="row-main tnum">${hhmm(e.start)} – ${running ? `<span class="c-accent">${t('now')}</span>` : hhmm(e.end)}${e.end && keyOf(e.end) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span>
       <span class="row-val tnum">${fmtHM(minsOf(e, now))}</span></li>`;
   });
   if (db.pausedAt && status() === 'paused') {
@@ -434,21 +382,26 @@ function viewWeek() {
   const mins = days.map(d => dayMins(keyOf(d), now));
   const total = mins.reduce((a, b) => a + b, 0);
   const extra = Math.max(0, total - target), left = Math.max(0, target - total);
-  const scale = Math.max(240, ...mins);
   const todayK = keyOf(now);
-  // barra: hasta el objetivo en verde; si se pasa, la escala crece y el exceso va en índigo a continuación
+  // gráfico: escala en múltiplos de 2 h (mín. 8 h) y una línea con la media diaria para llegar al objetivo en 5 días
+  const avg = Math.round(target / 5);
+  const scale = Math.max(480, Math.ceil(Math.max(avg, ...mins) / 120) * 120);
+  const ticks = [0, scale / 2, scale].filter(v => Math.abs(v - avg) > scale * 0.15);
+  const y = v => ((v / scale) * 100).toFixed(2);
+  // barra: hasta el objetivo en grafito; si se pasa, la escala crece y el exceso va en azul a continuación
   const span = Math.max(total, target);
   const pct = (Math.min(total, target) / span) * 100, xpct = (extra / span) * 100;
 
   const chart = days.map((d, i) => {
     const k = keyOf(d);
     const fut = d > new Date(now);
-    return `<button class="col${k === todayK ? ' is-today' : ''}${mins[i] ? '' : ' is-empty'}" data-day="${k}"${fut ? ' disabled' : ''}>
-      <span class="col-val tnum">${mins[i] ? fmtClock(mins[i]) : ''}</span>
-      <span class="col-bar"><i style="height:${mins[i] ? Math.max(4, (mins[i] / scale) * 100) : 0}%"></i></span>
+    return `<button class="col${k === todayK ? ' is-today' : ''}" data-day="${k}"${fut ? ' disabled' : ''} aria-label="${esc(fmt({ weekday: 'long' }, d))} ${mins[i] ? fmtHM(mins[i]) : ''}">
+      <span class="col-zone">${mins[i] ? `<span class="col-bar" style="height:max(3px, ${y(mins[i])}%)"><span class="col-val tnum">${fmtClock(mins[i])}</span></span>` : ''}</span>
       <span class="col-lbl">${L.wd_short[i]}</span>
     </button>`;
   }).join('');
+  const grid = ticks.map(v => `<i class="grid" style="bottom:${y(v)}%"><span>${v ? `${v / 60} ${L.h}` : '0'}</span></i>`).join('')
+    + `<i class="ref" style="bottom:${y(avg)}%"><span>${fmtClock(avg).replace(':00', '')} ${L.h}</span></i>`;
 
   const rows = days.map((d, i) => {
     const k = keyOf(d);
@@ -477,12 +430,13 @@ function viewWeek() {
     <section class="card summary">
       <div class="sum-top">
         <div><span class="cap">${t('worked')}</span><b class="sum-big tnum">${fmtHM(total)}</b><small>${t('of_h', { h: fmtHM(target) })}</small></div>
-        ${extra > 0 ? `<span class="pill pill-indigo">+${fmtHM(extra)} ${t('extra').toLowerCase()}</span>`
+        ${extra > 0 ? `<span class="pill pill-accent">+${fmtHM(extra)} ${t('extra').toLowerCase()}</span>`
           : left > 0 ? `<span class="pill">${t('left')} ${fmtHM(left)}</span>`
-          : `<span class="pill pill-green">${t('complete')}</span>`}
+          : `<span class="pill pill-ink">${t('complete')}</span>`}
       </div>
       <div class="bar-track"><i class="bar-main" style="width:${pct}%"></i><i class="bar-extra" style="left:${pct}%;width:${xpct}%"></i></div>
-      <div class="chart">${chart}</div>
+      <div class="chart"><div class="plot">${grid}</div><div class="cols">${chart}</div></div>
+      <p class="chart-note">${t('chart_note', { a: fmtHM(avg), w: fmtHM(target) })}</p>
     </section>
     <section>
       <ul class="list days">${rows}</ul>
@@ -516,7 +470,7 @@ function viewMonth() {
   const rows = d.weeks.map(w => `
     <li><button class="row tap" data-goweek="${+w.mon}"${w.fut ? ' disabled' : ''}>
       <span class="row-main"><b>${t('week_n', { n: isoWeek(w.mon) })}</b><span class="sub">${esc(rangeLabel(w.mon))}</span></span>
-      ${w.extra > 0 ? `<span class="pill pill-indigo sm">+${fmtHM(w.extra)}</span>` : ''}
+      ${w.extra > 0 ? `<span class="pill pill-accent sm">+${fmtHM(w.extra)}</span>` : ''}
       <span class="row-val tnum">${w.fut ? '' : fmtHM(w.total)}</span>${w.fut ? '' : ICON.chev}
     </button></li>`).join('');
 
@@ -536,7 +490,7 @@ function viewMonth() {
       <div class="tiles">
         <div class="tile"><span class="cap">${t('worked')}</span><b class="tnum">${fmtHM(d.total)}</b></div>
         <div class="tile"><span class="cap">${t('planned')}</span><b class="tnum">${fmtHM(d.planned)}</b></div>
-        <div class="tile"><span class="cap">${t('extra')}</span><b class="tnum ${d.extra ? 'c-indigo' : ''}">${d.extra ? '+' + fmtHM(d.extra) : '0'}</b></div>
+        <div class="tile"><span class="cap">${t('extra')}</span><b class="tnum ${d.extra ? 'c-accent' : ''}">${d.extra ? '+' + fmtHM(d.extra) : '0'}</b></div>
         <div class="tile"><span class="cap">${t('days_worked')}</span><b class="tnum">${d.days}</b></div>
       </div>
     </section>
@@ -567,20 +521,14 @@ function viewSettings() {
       <ul class="list form">
         <li class="row"><span class="row-main">${t('weekly')}</span>
           <span class="stepper"><button data-step="-30" aria-label="−">−</button><b class="tnum">${fmtClock(s.weekly)}</b><button data-step="30" aria-label="+">+</button></span></li>
-        <li class="row"><label for="f-lang">${t('language')}</label>
-          <select id="f-lang" data-set="lang">
-            <option value="auto"${s.lang === 'auto' ? ' selected' : ''}>${t('lang_auto')}</option>
-            <option value="es"${s.lang === 'es' ? ' selected' : ''}>Castellano</option>
-            <option value="ca"${s.lang === 'ca' ? ' selected' : ''}>Català</option>
-          </select></li>
       </ul>
       <p class="foot">${t('weekly_foot')}</p>
     </section>
     <section>
       <div class="group-head"><h2>${t('backup')}</h2></div>
       <ul class="list">
-        <li><button class="row tap c-tint" data-do="backup">${ICON.shield}<span class="row-main">${t('backup_export')}</span></button></li>
-        <li><label class="row tap c-tint">${ICON.note}<span class="row-main">${t('backup_import')}</span><input type="file" id="f-import" accept=".json,application/json" hidden></label></li>
+        <li><button class="row tap c-link" data-do="backup">${ICON.shield}<span class="row-main">${t('backup_export')}</span></button></li>
+        <li><label class="row tap c-link">${ICON.note}<span class="row-main">${t('backup_import')}</span><input type="file" id="f-import" accept=".json,application/json" hidden></label></li>
       </ul>
       <p class="foot">${lb ? t('backup_last', { d: relDay(lb) }) : t('backup_none')} ${t('backup_foot')}</p>
       <div class="group-head"><h2>${t('data')}</h2></div>
@@ -631,7 +579,7 @@ function openDay(k) {
             <span class="row-val tnum">${p ? fmtHM(minsOf(p)) : ''}</span>
           </li>`;
         }).join('')}
-        <li><button class="row tap c-tint" data-x="add">${ICON.plus}<span class="row-main">${t('add_tramo')}</span></button></li>
+        <li><button class="row tap c-link" data-x="add">${ICON.plus}<span class="row-main">${t('add_tramo')}</span></button></li>
       </ul>
       ${isToday && rows.some(r => !r.e) ? `<p class="foot">${t('open_hint')}</p>` : ''}
       <ul class="list total"><li class="row"><span class="row-main">${t('day_total')}</span><b class="row-val tnum" id="d-total">${fmtHM(totalMins())}</b></li></ul>
@@ -965,7 +913,6 @@ document.addEventListener('change', e => {
   if (k) {
     db.settings[k] = e.target.value.trim();
     save();
-    if (k === 'lang') render();
   }
   if (e.target.id === 'f-import' && e.target.files[0]) { importFile(e.target.files[0]); e.target.value = ''; }
 });

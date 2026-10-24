@@ -1,8 +1,8 @@
 {
   "name": "Jornada",
   "short_name": "Jornada",
-  "description": "Fichaje personal: entrada, pausa y salida, horas semanales y extra.",
-  "lang": "es",
+  "description": "Fitxatge personal: entrada, pausa i sortida, hores setmanals i extra.",
+  "lang": "ca",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
