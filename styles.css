@@ -18,6 +18,7 @@
   --red: #e30000;
   --green: #34c759;
   --green-text: #248a3d;
+  --seg-on: #ffffff;
   --bar: rgba(255, 255, 255, .8);
   --shadow: 0 10px 40px rgba(0, 0, 0, .12);
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
@@ -48,6 +49,7 @@
     --red: #ff453a;
     --green: #30d158;
     --green-text: #30d158;
+    --seg-on: #636366;
     --bar: rgba(22, 22, 23, .8);
     --shadow: 0 10px 40px rgba(0, 0, 0, .6);
   }
@@ -315,6 +317,17 @@ h1 { font-family: var(--display); font-size: 34px; line-height: 1.12; font-weigh
 }
 .btn-wide svg { width: 21px; height: 21px; margin-top: -2px; }
 .btn-wide:active { background: var(--fill2); }
+.btn-wide.c-red { color: var(--red); }
+.btn-primary {
+  width: 100%; height: 54px; margin-top: 16px; border-radius: 980px;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  background: var(--accent); color: #fff; font-size: 18px; font-weight: 600;
+  transition: transform .14s cubic-bezier(.2, .8, .2, 1), filter .2s;
+}
+.btn-primary svg { width: 22px; height: 22px; margin-top: -1px; }
+.btn-primary:active { transform: scale(.97); filter: brightness(.92); }
+.btn-link { display: block; margin: 10px auto 0; padding: 8px 14px; color: var(--link); font-size: 15px; }
+.ex-desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; line-height: 1.25; }
 
 /* ---------- Mes ---------- */
 
@@ -335,6 +348,27 @@ h1 { font-family: var(--display); font-size: 34px; line-height: 1.12; font-weigh
 .form select { text-align-last: right; direction: rtl; cursor: pointer; }
 .form select option { direction: ltr; }
 .form input:focus { color: var(--label); }
+.form input[type="date"] { min-height: 36px; }
+.form input::-webkit-date-and-time-value { text-align: right; }
+.unit { flex: none; color: var(--label2); margin-left: 5px; }
+.form input:focus + .unit { color: var(--label); }
+/* interruptor com el d'iOS */
+.form input.toggle, .toggle {
+  -webkit-appearance: none; appearance: none; flex: none; position: relative; cursor: pointer;
+  width: 51px; height: 31px; padding: 0; margin: 0; border-radius: 99px; background: var(--fill2); transition: background .25s;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%;
+  background: #fff; box-shadow: 0 3px 8px rgba(0, 0, 0, .15), 0 1px 1px rgba(0, 0, 0, .16);
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+.form input.toggle:checked, .toggle:checked { background: var(--green); }
+.toggle:checked::after { transform: translateX(20px); }
+.form label.row-main { flex: 1; }
+/* control segmentat */
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 9px; padding: 2px; margin: 4px 0 16px; }
+.seg button { height: 30px; border-radius: 7px; font-size: 14px; font-weight: 500; color: var(--label); transition: background .2s; }
+.seg button.on { background: var(--seg-on); font-weight: 600; box-shadow: 0 3px 8px rgba(0, 0, 0, .12), 0 0 0 .5px rgba(0, 0, 0, .04); }
 .stepper { display: flex; align-items: center; background: var(--fill); border-radius: 9px; height: 34px; }
 .stepper button { width: 44px; height: 34px; font-size: 22px; font-weight: 400; color: var(--label); line-height: 1; }
 .stepper button:active { background: var(--fill2); border-radius: 9px; }

@@ -1,11 +1,13 @@
 /* Service worker — funciona sin conexión y se actualiza en segundo plano */
-const CACHE = 'jornada-v3';
+const CACHE = 'jornada-v4';
 const ASSETS = [
   './',
   'index.html',
   'styles.css',
   'app.js',
   'manifest.webmanifest',
+  'pdf.js',
+  'vendor/jspdf.umd.min.js',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'icons/icon-512.png',

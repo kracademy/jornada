@@ -2,7 +2,7 @@
 /* Jornada — fichaje personal (entrada, pausa, salida). Todo vive en este dispositivo (localStorage). */
 
 const KEY = 'jornada-v1';
-const VERSION = '1.2';
+const VERSION = '1.3';
 const MIN = 60000;
 
 /* ---------- textos (en català) ---------- */
@@ -24,26 +24,33 @@ const L = {
   install_title: "Afegeix-la a la pantalla d'inici", install_text: "Prem Compartir i després «Afegeix a la pantalla d'inici». Així s'obre com una app i els horaris hi queden desats.", dismiss: 'Entesos',
   week_n: 'Setmana {n}', total: 'Total', planned: 'Previstes', days_worked: 'Dies', worked: 'Treballades',
   share_report: "Compartir l'informe", no_work: 'Sense horaris', future: '—',
-  month_weeks: 'Setmanes',
-  in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Nota', note_ph: 'Opcional, p. ex. muntatge al teatre',
+  month_weeks: 'Setmanes', extra_h: 'Hores extra', expenses: 'Despeses', to_collect: 'A cobrar',
+  send_pdf: 'Enviar el registre', other_formats: 'Altres formats (text, Excel)', pdf_ready: 'El PDF és a punt', share: 'Compartir', pdf_err: "No s'ha pogut crear el PDF.",
+  exp_none: 'Cap despesa aquest mes.', exp_new: 'Nova despesa', exp_edit: 'Despesa', exp_km: 'Quilometratge', exp_other: 'Altres',
+  exp_date: 'Data', exp_route: 'Trajecte', exp_route_ph: 'Granollers – Teatre (Mataró)', exp_km_one: "Km d'anada", exp_rt: 'Anada i tornada',
+  exp_concept: 'Concepte', exp_concept_ph: 'P. ex. pàrquing', exp_amount: 'Import', exp_delete: 'Eliminar la despesa',
+  exp_err: "Falta la data, el concepte o l'import.", exp_saved: 'Despesa desada', exp_deleted: 'Despesa eliminada', rt_short: 'anada i tornada',
+  in_short: 'Entrada', out_short: 'Sortida', add_tramo: 'Afegir tram', note: 'Concepte', note_ph: 'P. ex. Milnotes + Nit des de casa',
   cancel: 'Cancel·lar', done: 'Fet', delete: 'Eliminar', day_total: 'Total del dia', next_day: '+1 dia', open_hint: 'Deixa-la buida si continues treballant',
   err_overlap: 'Hi ha trams que se solapen. Revisa les hores.', err_noend: "Falta l'hora de sortida d'un tram.", err_future: 'Un tram acaba més tard que ara.', err_open: "Només pot quedar obert l'últim tram d'avui.",
   rep_title: 'Registre horari', rep_week: 'Setmana {n} · {r}', rep_week_tot: 'Total setmana: {t}', rep_extra_w: 'extra {t}',
-  rep_total: 'Total: {t} de {p} previstes', rep_extra: 'Hores extra: {t}', rep_noextra: 'Sense hores extra',
+  rep_total: 'Total: {t} de {p} previstes', rep_total_m: 'Total del mes: {t}', rep_exp_tot: 'Total despeses: {t}', rep_owed: 'A cobrar: {t}', rep_extra: 'Hores extra: {t}', rep_noextra: 'Sense hores extra',
   sh_text: 'Enviar com a text', sh_csv: 'Exportar a Excel (CSV)', sh_copy: 'Copiar el text', copied: 'Text copiat',
-  profile: 'Perfil', name: 'Nom', company: 'Empresa', schedule: 'Jornada', weekly: 'Hores per setmana',
-  weekly_foot: "El que passi d'aquestes hores en una setmana (de dilluns a diumenge) compta com a hores extra.",
+  profile: 'Perfil', name: 'Nom', company: 'Empresa', city: 'Població', schedule: 'Contracte', weekly: 'Hores per setmana', c_start: 'Inici', c_end: 'Final',
+  pay: 'Pagaments', extra_rate: 'Preu hora extra', km_rate: 'Preu per km',
+  pay_foot: "Serveixen per calcular el que queda per cobrar cada mes. Cada desplaçament es queda amb el preu per km del dia que l'afegeixes.",
+  weekly_foot: "Dins de cada setmana (de dilluns a diumenge), un cop fetes aquestes hores, la resta compten com a hores extra. Les setmanes on comença o acaba el contracte compten la part proporcional.",
   backup: 'Còpia de seguretat', backup_export: 'Desar una còpia', backup_import: 'Restaurar una còpia',
   backup_last: 'Última còpia: {d}.', backup_none: 'Encara no hi ha cap còpia.',
   backup_foot: "Al menú Compartir tria «Desa a Arxius» i desa-la a l'iCloud Drive.",
-  import_q: 'Restaurar aquesta còpia?', import_msg: 'Els {a} trams actuals se substituiran pels {b} de la còpia ({d}).', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
-  data: 'Dades', erase: 'Esborrar tots els horaris', erase_q: 'Esborrar tots els horaris?', erase_msg: 'No es pot desfer. Desa abans una còpia de seguretat.', erase_btn: 'Esborrar', erased: 'Horaris esborrats',
+  import_q: 'Restaurar aquesta còpia?', import_msg: "S'afegiran {a} trams i {b} despeses de la còpia ({d}). El que ja tens no es toca.", import_none: 'Aquesta còpia no té res de nou.', import_ok: 'Còpia restaurada', import_bad: 'Aquest arxiu no és una còpia de Jornada.', restore: 'Restaurar',
+  data: 'Dades', erase: 'Esborrar tots els horaris', erase_q: 'Esborrar tots els horaris?', erase_msg: "S'esborraran els horaris i les despeses. No es pot desfer: desa abans una còpia de seguretat.", erase_btn: 'Esborrar', erased: 'Horaris esborrats',
   about: 'Jornada {v}',
   today_word: 'avui', yesterday: 'ahir', days_ago: 'fa {n} dies',
   err_save: "No s'ha pogut desar. Fes una còpia de seguretat com més aviat millor.",
   saved: 'Desat', deleted: 'Tram eliminat',
-  csv_head: ['Data', 'Dia', 'Setmana', 'Entrada', 'Sortida', 'Hores (h:mm)', 'Hores (decimal)', 'Nota'],
-  csv_weeks: 'Resum per setmanes', csv_week: 'Setmana', csv_from: 'Del', csv_to: 'Al', csv_tot: 'Hores', csv_plan: 'Previstes', csv_ext: 'Extra',
+  csv_head: ['Data', 'Dia', 'Matí entrada', 'Matí sortida', 'Tarda entrada', 'Tarda sortida', 'Nit entrada', 'Nit sortida', 'T. hores', 'T. extres', 'Concepte'],
+  csv_tot: 'TOTALS', csv_exp: 'Desplaçaments i despeses', csv_exp_head: ['Data', 'Concepte', 'Km', 'Import (€)'],
   chart_note: 'La línia blava marca {a} per dia, la mitjana per arribar a {w} en 5 dies. Cada barra són les hores fetes aquell dia.',
   wd_short: ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg'],
   h: 'h', min: 'min',
@@ -89,7 +96,7 @@ const fmtClock = mins => `${Math.floor(Math.max(0, mins) / 60)}:${pad(Math.max(0
 /** "16–22 nov", "26 oct – 1 nov" */
 function spanLabel(a, b) {
   const mo = d => fmt({ month: 'short' }, d).replace('.', '');
-  if (a.getMonth() === b.getMonth()) return `${a.getDate()}–${b.getDate()} ${mo(b)}`;
+  if (a.getMonth() === b.getMonth()) return `${a.getDate() === b.getDate() ? '' : `${a.getDate()}–`}${b.getDate()} ${mo(b)}`;
   return `${a.getDate()} ${mo(a)} – ${b.getDate()} ${mo(b)}`;
 }
 const rangeLabel = mon => spanLabel(mon, addDays(mon, 6));
@@ -102,17 +109,30 @@ function relDay(ms) {
 
 /* ---------- datos ---------- */
 
-const DEFAULTS = { v: 1, settings: { name: 'Marc', company: 'Milnotes', weekly: 20 * 60, lastBackup: null }, entries: [], notes: {}, pausedAt: null };
+const DEFAULTS = {
+  v: 1,
+  settings: { name: 'Marc', company: 'Milnotes', city: 'Granollers', weekly: 20 * 60, start: null, end: null, extraRate: 10, kmRate: 0.26, lastBackup: null },
+  entries: [], notes: {}, expenses: [], pausedAt: null,
+};
+const isKey = k => typeof k === 'string' && /^\d{4}-\d\d-\d\d$/.test(k);
 
 function normalize(d) {
   if (!d || typeof d !== 'object' || !Array.isArray(d.entries)) return null;
+  const settings = { ...DEFAULTS.settings, ...(d.settings || {}) };
+  if (!isKey(settings.start)) settings.start = null;
+  if (!isKey(settings.end)) settings.end = null;
   return {
     v: 1,
-    settings: { ...DEFAULTS.settings, ...(d.settings || {}) },
+    settings,
     entries: d.entries
       .filter(e => e && Number.isFinite(e.start))
-      .map(e => ({ id: String(e.id || uid()), start: e.start, end: Number.isFinite(e.end) ? e.end : null })),
+      .map(e => ({ id: String(e.id || uid()), start: e.start, end: Number.isFinite(e.end) ? e.end : null, ...(isKey(e.day) ? { day: e.day } : {}) })),
     notes: d.notes && typeof d.notes === 'object' ? d.notes : {},
+    expenses: (Array.isArray(d.expenses) ? d.expenses : [])
+      .filter(x => x && isKey(x.date))
+      .map(x => (x.kind === 'km'
+        ? { id: String(x.id || uid()), date: x.date, kind: 'km', desc: String(x.desc || ''), km1: +x.km1 || 0, rt: !!x.rt, rate: typeof x.rate === 'number' ? x.rate : settings.kmRate }
+        : { id: String(x.id || uid()), date: x.date, kind: 'other', desc: String(x.desc || ''), amount: +x.amount || 0 })),
     pausedAt: Number.isFinite(d.pausedAt) ? d.pausedAt : null,
     updatedAt: d.updatedAt || null,
   };
@@ -136,28 +156,89 @@ let db = load();
 /* minutos de un tramo, contados entre las horas que se ven (HH:MM) para que los totales cuadren con lo mostrado */
 const minsOf = (e, now = Date.now()) => Math.max(0, Math.floor((e.end ?? now) / MIN) - Math.floor(e.start / MIN));
 const openEntry = () => db.entries.find(e => e.end == null);
-const entriesOn = k => db.entries.filter(e => keyOf(e.start) === k).sort((a, b) => a.start - b.start);
+/* un tram compta el dia que comença; `day` el pot deixar al dia anterior (una nit que comença a les 0:00) */
+const dayOf = e => e.day || keyOf(e.start);
+const entriesOn = k => db.entries.filter(e => dayOf(e) === k).sort((a, b) => a.start - b.start);
 const dayMins = (k, now) => entriesOn(k).reduce((s, e) => s + minsOf(e, now), 0);
 function weekMins(mon, now = Date.now()) {
-  const from = +mon, to = +addDays(mon, 7);
-  return db.entries.reduce((s, e) => (e.start >= from && e.start < to ? s + minsOf(e, now) : s), 0);
+  let s = 0;
+  for (let i = 0; i < 7; i++) s += dayMins(keyOf(addDays(mon, i)), now);
+  return s;
 }
 function status() {
   if (openEntry()) return 'in';
   if (db.pausedAt && keyOf(db.pausedAt) === keyOf(Date.now())) return 'paused';
   return 'out';
 }
-function weeksOfMonth(y, m) {
-  const out = [];
-  for (let w = monday(new Date(y, m, 1)); w <= new Date(y, m + 1, 0); w = addDays(w, 7)) {
-    if (addDays(w, 3).getMonth() === m) out.push(w);
-  }
-  // la semana del día 1 puede caer en el mes anterior: si su jueves es de este mes ya está dentro
-  return out.filter(w => w >= firstMon());
+
+/* contracte: abans de l'inici no hi ha res, i les setmanes on comença o acaba compten la part proporcional */
+const startKey = () => db.settings.start || db.entries.reduce((k, e) => (dayOf(e) < k ? dayOf(e) : k), keyOf(Date.now()));
+const firstMon = () => monday(dateOf(startKey()));
+const inContract = k => (!db.settings.start || k >= db.settings.start) && (!db.settings.end || k <= db.settings.end);
+function weekTarget(mon) {
+  let n = 0;
+  for (let i = 0; i < 7; i++) if (inContract(keyOf(addDays(mon, i)))) n++;
+  return (db.settings.weekly * n) / 7;
 }
-/* las semanas anteriores al primer fichaje no existen para la app (ni previstas ni informes) */
-const firstMon = () => monday(db.entries.reduce((m, e) => Math.min(m, e.start), Date.now()));
-const monthRange = weeks => (weeks.length ? spanLabel(weeks[0], addDays(weeks[weeks.length - 1], 6)) : '');
+/* hores extra de cada dia: dins la setmana, un cop fetes les hores de contracte, la resta són extra */
+function weekExtras(mon, now = Date.now()) {
+  const target = weekTarget(mon);
+  let cum = 0;
+  return [...Array(7)].map((_, i) => {
+    const m = dayMins(keyOf(addDays(mon, i)), now);
+    const x = Math.max(0, cum + m - target) - Math.max(0, cum - target);
+    cum += m;
+    return x;
+  });
+}
+const dayExtra = (k, now) => weekExtras(monday(dateOf(k)), now)[(dateOf(k).getDay() + 6) % 7];
+
+/* trossos de setmana entre dos dies (un mes o una setmana): hores, extra i hores de contracte que quedaven */
+function periods(from, to, now = Date.now()) {
+  const s0 = startKey();
+  if (from < s0) from = s0;
+  if (from > to) return [];
+  const out = [];
+  for (let mon = monday(dateOf(from)); keyOf(mon) <= to; mon = addDays(mon, 7)) {
+    const a = keyOf(mon) < from ? from : keyOf(mon);
+    const sun = keyOf(addDays(mon, 6)), b = sun > to ? to : sun;
+    const ex = weekExtras(mon, now), target = weekTarget(mon);
+    let worked = 0, extra = 0, before = 0;
+    for (let i = 0; i < 7; i++) {
+      const k = keyOf(addDays(mon, i)), mm = dayMins(k, now);
+      if (k < a) before += mm;
+      else if (k <= b) { worked += mm; extra += ex[i]; }
+    }
+    out.push({ mon, a, b, worked, extra, target, left: Math.max(0, target - before), fut: a > keyOf(now) });
+  }
+  return out;
+}
+const monthKeys = (y, m) => [keyOf(new Date(y, m, 1)), keyOf(new Date(y, m + 1, 0))];
+
+/* despeses: quilometratge (km d'anada, ×2 si és anada i tornada) o un import */
+const expKm = x => (x.kind === 'km' ? x.km1 * (x.rt ? 2 : 1) : 0);
+const expAmount = x => (x.kind === 'km' ? Math.round(expKm(x) * x.rate * 100) / 100 : x.amount);
+function monthExpenses(y, m) {
+  const [first, last] = monthKeys(y, m), s0 = db.settings.start;
+  // el primer mes de contracte també recull les despeses d'abans de començar
+  const early = s0 && s0 >= first && s0 <= last;
+  return db.expenses.filter(x => (x.date >= first && x.date <= last) || (early && x.date < first)).sort((a, b) => a.date.localeCompare(b.date));
+}
+const fmtNum = (v, d = 2) => (Math.round(v * 10 ** d) / 10 ** d).toLocaleString(L.locale, { maximumFractionDigits: d });
+const fmtEUR = v => `${v.toLocaleString(L.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+const parseNum = v => { const n = parseFloat(String(v ?? '').replace(/\s/g, '').replace(',', '.')); return Number.isFinite(n) ? n : 0; };
+
+/* trams d'un dia repartits en matí, tarda i nit, com al full de registre */
+function daySlots(k) {
+  const out = { mati: [], tarda: [], nit: [] };
+  for (const e of entriesOn(k)) {
+    const d = new Date(e.start), mm = d.getHours() * 60 + d.getMinutes();
+    out[keyOf(e.start) !== k || mm >= 21 * 60 + 30 ? 'nit' : mm < 14 * 60 ? 'mati' : 'tarda'].push(e);
+  }
+  return out;
+}
+/* "9:30", amb * si ja és el dia següent */
+const clockAt = (k, ms) => { const d = new Date(ms); return `${d.getHours()}:${pad(d.getMinutes())}${keyOf(ms) !== k ? '*' : ''}`; };
 
 /* ---------- estado de la interfaz ---------- */
 
@@ -206,6 +287,7 @@ const ICON = {
   plus: '<svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg>',
   minus: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="M7.5 12h9" stroke="#fff" stroke-width="2.2"/></svg>',
   note: '<svg viewBox="0 0 24 24"><path d="M6 4.5h12a1.5 1.5 0 0 1 1.5 1.5v8.5L14.5 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5Z"/><path d="M14.5 19.5V16a1.5 1.5 0 0 1 1.5-1.5h3.5"/></svg>',
+  doc: '<svg viewBox="0 0 24 24"><path d="M7 3.5h6.5l5 5V19a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5Z"/><path d="M13.5 3.5V7a1.5 1.5 0 0 0 1.5 1.5h3.5M9 13h6M9 16.5h4"/></svg>',
   shield: '<svg viewBox="0 0 24 24"><path d="M12 3.2 5 6v5.6c0 4.3 3 7.8 7 9.2 4-1.4 7-4.9 7-9.2V6l-7-2.8Z"/></svg>',
   install: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8.5v7M8.5 12h7"/></svg>',
 };
@@ -219,6 +301,7 @@ function render() {
   v.innerHTML = { today: viewToday, week: viewWeek, month: viewMonth, settings: viewSettings }[ui.tab]();
   ui.anim = false;
   if (ui.tab === 'today') live();
+  if (ui.tab === 'month') setTimeout(() => loadPDF().catch(() => { /* sense connexió: es tornarà a provar */ }), 400);
 }
 
 function renderTabbar() {
@@ -255,7 +338,7 @@ function viewToday() {
   const k = keyOf(now);
   const st = status();
   const open = openEntry();
-  const target = db.settings.weekly;
+  const target = weekTarget(monday(now));
   const wk = weekMins(monday(now), now);
   const extra = Math.max(0, wk - target), left = Math.max(0, target - wk);
   const name = (db.settings.name || '').trim().split(/\s+/)[0];
@@ -384,12 +467,12 @@ function viewWeek() {
   const now = Date.now();
   const mon = ui.week;
   const isCurrent = +mon === +monday(now);
-  const target = db.settings.weekly;
+  const target = weekTarget(mon);
   const days = [...Array(7)].map((_, i) => addDays(mon, i));
   const mins = days.map(d => dayMins(keyOf(d), now));
   const total = mins.reduce((a, b) => a + b, 0);
   const extra = Math.max(0, total - target), left = Math.max(0, target - total);
-  const todayK = keyOf(now);
+  const todayK = keyOf(now), s0 = startKey();
   // gráfico: escala en múltiplos de 2 h (mín. 8 h) y una línea con la media diaria para llegar al objetivo en 5 días
   const avg = Math.round(target / 5);
   const scale = Math.max(480, Math.ceil(Math.max(avg, ...mins) / 120) * 120);
@@ -401,7 +484,7 @@ function viewWeek() {
 
   const chart = days.map((d, i) => {
     const k = keyOf(d);
-    const fut = d > new Date(now);
+    const fut = d > new Date(now) || k < s0;
     return `<button class="col${k === todayK ? ' is-today' : ''}" data-day="${k}"${fut ? ' disabled' : ''} aria-label="${esc(fmt({ weekday: 'long' }, d))} ${mins[i] ? fmtHM(mins[i]) : ''}">
       <span class="col-zone">${mins[i] ? `<span class="col-bar" style="height:max(3px, ${y(mins[i])}%)"><span class="col-val tnum">${fmtClock(mins[i])}</span></span>` : ''}</span>
       <span class="col-lbl">${L.wd_short[i]}</span>
@@ -412,7 +495,8 @@ function viewWeek() {
 
   const rows = days.map((d, i) => {
     const k = keyOf(d);
-    const fut = d > new Date(now) && k !== todayK;
+    // dies futurs o d'abans del contracte: no es poden editar
+    const fut = (d > new Date(now) && k !== todayK) || k < s0;
     const list = entriesOn(k);
     const spans = list.map(e => `${hhmm(e.start)}–${e.end ? hhmm(e.end) : t('now')}`).join(' · ');
     return `<li><button class="row tap" data-day="${k}"${fut ? ' disabled' : ''}>
@@ -452,20 +536,16 @@ function viewWeek() {
   </div>`;
 }
 
-/* ---------- Mes ---------- */
+/* ---------- Mes (natural, de l'1 a l'últim dia, com el full de registre) ---------- */
 
 function monthData(y, m, now = Date.now()) {
-  const weeks = weeksOfMonth(y, m).map(mon => {
-    const total = weekMins(mon, now);
-    const fut = mon > new Date(now);
-    return { mon, total, extra: Math.max(0, total - db.settings.weekly), fut };
-  });
-  const past = weeks.filter(w => !w.fut);
-  const total = weeks.reduce((s, w) => s + w.total, 0);
-  const extra = weeks.reduce((s, w) => s + w.extra, 0);
-  const days = new Set();
-  weeks.forEach(w => { for (let i = 0; i < 7; i++) { const k = keyOf(addDays(w.mon, i)); if (dayMins(k, now) > 0) days.add(k); } });
-  return { weeks, total, extra, planned: weeks.length * db.settings.weekly, plannedSoFar: past.length * db.settings.weekly, days: days.size };
+  const [first, last] = monthKeys(y, m);
+  const ps = periods(first, last, now);
+  const total = ps.reduce((s, p) => s + p.worked, 0), extra = ps.reduce((s, p) => s + p.extra, 0);
+  const exps = monthExpenses(y, m);
+  const spent = exps.reduce((s, x) => s + expAmount(x), 0);
+  const owed = Math.round(((extra / 60) * db.settings.extraRate + spent) * 100) / 100;
+  return { periods: ps, total, extra, exps, spent, owed };
 }
 
 function viewMonth() {
@@ -474,17 +554,26 @@ function viewMonth() {
   const cur = new Date(now);
   const isCurrent = y === cur.getFullYear() && m === cur.getMonth();
   const d = monthData(y, m, now);
-  const canPrev = weeksOfMonth(y, m - 1).length > 0;
-  const rows = d.weeks.map(w => `
-    <li><button class="row tap" data-goweek="${+w.mon}"${w.fut ? ' disabled' : ''}>
-      <span class="row-main"><b>${t('week_n', { n: isoWeek(w.mon) })}</b><span class="sub">${esc(rangeLabel(w.mon))}</span></span>
-      ${w.extra > 0 ? `<span class="pill pill-accent sm">+${fmtHM(w.extra)}</span>` : ''}
-      <span class="row-val tnum">${w.fut ? '' : fmtHM(w.total)}</span>${w.fut ? '' : ICON.chev}
+  const canPrev = keyOf(new Date(y, m, 0)) >= startKey();
+  const short = (o, dt) => fmt(o, dt).replace('.', '');
+  const rows = d.periods.map(p => `
+    <li><button class="row tap" data-goweek="${+p.mon}"${p.fut ? ' disabled' : ''}>
+      <span class="row-main"><b>${t('week_n', { n: isoWeek(p.mon) })}</b><span class="sub">${esc(spanLabel(dateOf(p.a), dateOf(p.b)))}</span></span>
+      ${p.extra >= 0.5 ? `<span class="pill pill-accent sm">+${fmtHM(p.extra)}</span>` : ''}
+      <span class="row-val tnum">${p.fut ? '' : fmtHM(p.worked)}</span>${p.fut ? '' : ICON.chev}
     </button></li>`).join('');
+  const exRows = d.exps.map(x => {
+    const dt = dateOf(x.date);
+    return `<li><button class="row tap" data-exp="${esc(x.id)}">
+      <span class="day-k"><b>${esc(dt.getMonth() !== m ? short({ month: 'short' }, dt) : short({ weekday: 'short' }, dt))}</b><span>${dt.getDate()}</span></span>
+      <span class="row-main"><span class="ex-desc">${esc(x.desc)}</span><span class="sub">${x.kind === 'km' ? `${fmtNum(expKm(x))} km${x.rt ? ` · ${t('rt_short')}` : ''}` : t('exp_other')}</span></span>
+      <span class="row-val tnum">${fmtEUR(expAmount(x))}</span>${ICON.chev}
+    </button></li>`;
+  }).join('');
 
   return `
   <header class="top">
-    <p class="eyebrow">${y}${d.weeks.length ? ` · ${esc(monthRange(d.weeks.map(w => w.mon)))}` : ''}</p>
+    <p class="eyebrow">${y}</p>
     <div class="title-row">
       <h1>${esc(cap(fmt({ month: 'long' }, new Date(y, m, 1))))}</h1>
       <div class="nav">
@@ -497,15 +586,18 @@ function viewMonth() {
     <section>
       <div class="tiles">
         <div class="tile"><span class="cap">${t('worked')}</span><b class="tnum">${fmtHM(d.total)}</b></div>
-        <div class="tile"><span class="cap">${t('planned')}</span><b class="tnum">${fmtHM(d.planned)}</b></div>
-        <div class="tile"><span class="cap">${t('extra')}</span><b class="tnum ${d.extra ? 'c-accent' : ''}">${d.extra ? '+' + fmtHM(d.extra) : '0'}</b></div>
-        <div class="tile"><span class="cap">${t('days_worked')}</span><b class="tnum">${d.days}</b></div>
+        <div class="tile"><span class="cap">${t('extra_h')}</span><b class="tnum ${d.extra >= 0.5 ? 'c-accent' : ''}">${d.extra >= 0.5 ? '+' + fmtHM(d.extra) : '0'}</b></div>
+        <div class="tile"><span class="cap">${t('expenses')}</span><b class="tnum">${fmtEUR(d.spent)}</b></div>
+        <div class="tile"><span class="cap">${t('to_collect')}</span><b class="tnum">${fmtEUR(d.owed)}</b></div>
       </div>
+      <button class="btn-primary" data-pdf="1">${ICON.doc}<span>${t('send_pdf')}</span></button>
+      <button class="btn-link" data-share="month">${t('other_formats')}</button>
     </section>
     <section>
       <div class="group-head"><h2>${t('month_weeks')}</h2></div>
       <ul class="list">${rows}</ul>
-      <button class="btn-wide" data-share="month">${ICON.share}<span>${t('share_report')}</span></button>
+      <div class="group-head"><h2>${t('expenses')}</h2><button class="link" data-exp="new">${t('add')}</button></div>
+      ${exRows ? `<ul class="list">${exRows}</ul>` : `<p class="empty">${t('exp_none')}</p>`}
     </section>
   </div>`;
 }
@@ -515,6 +607,7 @@ function viewMonth() {
 function viewSettings() {
   const s = db.settings;
   const lb = s.lastBackup;
+  const money = (k, unit) => `<input id="f-${k}" data-set="${k}" data-type="num" inputmode="decimal" value="${esc(fmtNum(s[k]))}" enterkeyhint="done"><span class="unit">${unit}</span>`;
   return `
   <header class="top"><h1>${t('tab_settings')}</h1></header>
   <div class="split">
@@ -523,13 +616,22 @@ function viewSettings() {
       <ul class="list form">
         <li class="row"><label for="f-name">${t('name')}</label><input id="f-name" data-set="name" value="${esc(s.name)}" autocomplete="name" enterkeyhint="done"></li>
         <li class="row"><label for="f-co">${t('company')}</label><input id="f-co" data-set="company" value="${esc(s.company)}" enterkeyhint="done"></li>
+        <li class="row"><label for="f-city">${t('city')}</label><input id="f-city" data-set="city" value="${esc(s.city)}" enterkeyhint="done"></li>
       </ul>
       <div class="group-head"><h2>${t('schedule')}</h2></div>
       <ul class="list form">
         <li class="row"><span class="row-main">${t('weekly')}</span>
           <span class="stepper"><button data-step="-30" aria-label="−">−</button><b class="tnum">${fmtClock(s.weekly)}</b><button data-step="30" aria-label="+">+</button></span></li>
+        <li class="row"><label for="f-start">${t('c_start')}</label><input type="date" id="f-start" data-set="start" data-type="date" value="${s.start || ''}"></li>
+        <li class="row"><label for="f-end">${t('c_end')}</label><input type="date" id="f-end" data-set="end" data-type="date" value="${s.end || ''}"></li>
       </ul>
       <p class="foot">${t('weekly_foot')}</p>
+      <div class="group-head"><h2>${t('pay')}</h2></div>
+      <ul class="list form">
+        <li class="row"><label for="f-extraRate">${t('extra_rate')}</label>${money('extraRate', '€/h')}</li>
+        <li class="row"><label for="f-kmRate">${t('km_rate')}</label>${money('kmRate', '€/km')}</li>
+      </ul>
+      <p class="foot">${t('pay_foot')}</p>
     </section>
     <section>
       <div class="group-head"><h2>${t('backup')}</h2></div>
@@ -543,6 +645,77 @@ function viewSettings() {
       <p class="foot center">${t('about', { v: VERSION })}</p>
     </section>
   </div>`;
+}
+
+/* ---------- full d'una despesa ---------- */
+
+function openExpense(id) {
+  const x0 = id ? db.expenses.find(x => x.id === id) : null;
+  if (id && !x0) return;
+  const f = { kind: 'km', desc: '', km1: 0, rt: true, amount: 0, rate: db.settings.kmRate, ...(x0 || { id: uid(), date: keyOf(Date.now()) }) };
+  const sheet = openSheet(`
+    <div class="sheet-bar">
+      <button class="link" data-x="cancel">${t('cancel')}</button>
+      <h3>${t(x0 ? 'exp_edit' : 'exp_new')}</h3>
+      <button class="link strong" data-x="save">${t('done')}</button>
+    </div>
+    <div class="sheet-body"></div>`);
+  const body = $('.sheet-body', sheet.el);
+  const km = () => f.km1 * (f.rt ? 2 : 1);
+  const total = () => (f.kind === 'km' ? Math.round(km() * f.rate * 100) / 100 : f.amount);
+  const calc = () => (f.kind === 'km' ? `${fmtNum(km())} km × ${fmtNum(f.rate)} €/km` : t('exp_amount'));
+  const num = v => (v ? fmtNum(v) : '');
+
+  function draw() {
+    const isKm = f.kind === 'km';
+    body.innerHTML = `
+      <div class="seg" role="tablist">${['km', 'other'].map(k => `<button role="tab" data-kind="${k}" class="${f.kind === k ? 'on' : ''}" aria-selected="${f.kind === k}">${t(k === 'km' ? 'exp_km' : 'exp_other')}</button>`).join('')}</div>
+      <ul class="list form">
+        <li class="row"><label for="x-date">${t('exp_date')}</label><input type="date" id="x-date" data-f="date" value="${f.date}"></li>
+        <li class="row"><label for="x-desc">${t(isKm ? 'exp_route' : 'exp_concept')}</label><input id="x-desc" data-f="desc" value="${esc(f.desc)}" placeholder="${esc(t(isKm ? 'exp_route_ph' : 'exp_concept_ph'))}" enterkeyhint="next"></li>
+        ${isKm ? `
+        <li class="row"><label for="x-km">${t('exp_km_one')}</label><input id="x-km" data-f="km1" inputmode="decimal" value="${num(f.km1)}" placeholder="0" enterkeyhint="done"><span class="unit">km</span></li>
+        <li class="row"><label for="x-rt" class="row-main">${t('exp_rt')}</label><input type="checkbox" class="toggle" id="x-rt" data-f="rt"${f.rt ? ' checked' : ''}></li>`
+        : `<li class="row"><label for="x-amt">${t('exp_amount')}</label><input id="x-amt" data-f="amount" inputmode="decimal" value="${num(f.amount)}" placeholder="0" enterkeyhint="done"><span class="unit">€</span></li>`}
+      </ul>
+      <ul class="list total"><li class="row"><span class="row-main" id="x-calc">${esc(calc())}</span><b class="row-val tnum" id="x-tot">${fmtEUR(total())}</b></li></ul>
+      ${x0 ? `<button class="btn-wide c-red" data-x="del">${t('exp_delete')}</button>` : ''}
+      <p class="err" hidden></p>`;
+  }
+  draw();
+  const update = () => { $('#x-calc', body).textContent = calc(); $('#x-tot', body).textContent = fmtEUR(total()); };
+  body.addEventListener('input', e => {
+    const k = e.target.dataset.f;
+    if (!k) return;
+    f[k] = k === 'rt' ? e.target.checked : k === 'km1' || k === 'amount' ? parseNum(e.target.value) : e.target.value;
+    update();
+  });
+  body.addEventListener('change', e => { if (e.target.dataset.f === 'rt') haptic(); });
+
+  sheet.el.addEventListener('click', e => {
+    const kind = e.target.closest('[data-kind]')?.dataset.kind;
+    if (kind && kind !== f.kind) { f.kind = kind; haptic(); draw(); return; }
+    const x = e.target.closest('[data-x]')?.dataset.x;
+    if (x === 'cancel') sheet.close();
+    if (x === 'del') {
+      const before = JSON.stringify(db);
+      db.expenses = db.expenses.filter(z => z.id !== f.id);
+      save(); haptic(); sheet.close(); render();
+      toast(t('exp_deleted'), () => { db = normalize(JSON.parse(before)); save(); render(); });
+    }
+    if (x === 'save') {
+      const err = $('.err', body);
+      if (!isKey(f.date) || !f.desc.trim() || !(f.kind === 'km' ? f.km1 > 0 : f.amount > 0)) {
+        err.textContent = t('exp_err'); err.hidden = false; haptic(); return;
+      }
+      const rec = f.kind === 'km'
+        ? { id: f.id, date: f.date, kind: 'km', desc: f.desc.trim(), km1: f.km1, rt: !!f.rt, rate: f.rate }
+        : { id: f.id, date: f.date, kind: 'other', desc: f.desc.trim(), amount: Math.round(f.amount * 100) / 100 };
+      db.expenses = db.expenses.filter(z => z.id !== f.id).concat(rec);
+      save(); haptic(); sheet.close(); render();
+      toast(t('exp_saved'));
+    }
+  });
 }
 
 /* ---------- editor de un día ---------- */
@@ -580,7 +753,7 @@ function openDay(k) {
           const p = parse(r);
           return `<li class="row" data-i="${i}">
             <button class="del" data-del="${i}" aria-label="${t('delete')}">${ICON.minus}</button>
-            <label class="tfield"><span>${t('in_short')}</span><input type="time" data-f="s" value="${r.s}"></label>
+            <label class="tfield"><span>${t('in_short')}${p && keyOf(p.start) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span><input type="time" data-f="s" value="${r.s}"></label>
             <span class="arrow">→</span>
             <label class="tfield"><span>${t('out_short')}${p && p.end && keyOf(p.end) !== k ? ` <sup>${t('next_day')}</sup>` : ''}</span><input type="time" data-f="e" value="${r.e}"${!r.e ? ' class="is-open"' : ''}></label>
             <span class="row-val tnum">${p ? fmtHM(minsOf(p)) : ''}</span>
@@ -626,7 +799,7 @@ function openDay(k) {
       else { e2 = ps[0].start - 60 * MIN; s = e2 - 240 * MIN; }
       e2 = Math.min(e2, limit); s = Math.max(dayStart, Math.min(s, e2 - 30 * MIN));
       rows.push({ id: uid(), s: hhmm(s), e: hhmm(e2), s0: null, e0: null });
-      rows.sort((a, b) => (a.s < b.s ? -1 : 1));
+      rows.sort((a, b) => (parse(a)?.start ?? 0) - (parse(b)?.start ?? 0));
       draw();
     }
     if (x === 'save') {
@@ -635,7 +808,7 @@ function openDay(k) {
       for (const r of rows) {
         const p = parse(r);
         if (!p) continue;
-        parsed.push({ id: r.id, ...p });
+        parsed.push({ id: r.id, ...p, ...(keyOf(p.start) !== k ? { day: k } : {}) });
       }
       parsed.sort((a, b) => a.start - b.start);
       const fail = msg => { err.textContent = msg; err.hidden = false; haptic(); };
@@ -646,7 +819,7 @@ function openDay(k) {
         if (p.end != null && p.end > Date.now() + MIN) return fail(t('err_future'));
         if (i > 0 && p.start < parsed[i - 1].end) return fail(t('err_overlap'));
       }
-      const others = db.entries.filter(e => keyOf(e.start) !== k);
+      const others = db.entries.filter(e => dayOf(e) !== k);
       if (parsed.some(p => p.end == null) && others.some(e => e.end == null)) return fail(t('err_open'));
       db.entries = others.concat(parsed);
       if (note.trim()) db.notes[k] = note.trim(); else delete db.notes[k];
@@ -742,80 +915,118 @@ function delEntry(id) {
 
 /* ---------- informes ---------- */
 
-function reportWeeks(scope) {
-  if (scope === 'week') return { weeks: [ui.week], title: `${t('week_n', { n: isoWeek(ui.week) })} · ${rangeLabel(ui.week)} ${ui.week.getFullYear()}` };
+function reportScope(scope, now = Date.now()) {
+  const today = keyOf(now);
+  if (scope === 'week') {
+    const mon = ui.week, sun = keyOf(addDays(mon, 6));
+    return { periods: periods(keyOf(mon), sun < today ? sun : today, now), exps: [], title: `${t('week_n', { n: isoWeek(mon) })} · ${rangeLabel(mon)} ${mon.getFullYear()}` };
+  }
   const { y, m } = ui.month;
-  const weeks = weeksOfMonth(y, m).filter(w => w <= new Date());
-  return { weeks, title: `${cap(fmt({ month: 'long', year: 'numeric' }, new Date(y, m, 1)))}${weeks.length ? ` · ${monthRange(weeks)}` : ''}` };
+  const [first, last] = monthKeys(y, m);
+  return { periods: periods(first, last < today ? last : today, now), exps: monthExpenses(y, m), title: cap(fmt({ month: 'long', year: 'numeric' }, new Date(y, m, 1))) };
 }
 function who() {
   const s = db.settings;
   return [s.name, s.company].map(x => (x || '').trim()).filter(Boolean).join(' · ');
 }
+const expLabel = x => (x.kind === 'km' ? `${x.desc}${x.rt ? `, ${t('rt_short')}` : ''}` : x.desc);
+function* daysOf(p) { for (let d = dateOf(p.a); keyOf(d) <= p.b; d = addDays(d, 1)) yield d; }
 
 function reportText(scope) {
-  const { weeks, title } = reportWeeks(scope);
-  const target = db.settings.weekly;
+  const { periods: ps, exps, title } = reportScope(scope);
   const lines = [`${t('rep_title')}${who() ? ' · ' + who() : ''}`, title, ''];
   let tot = 0, ext = 0;
-  for (const mon of weeks) {
-    const wm = weekMins(mon);
-    const we = Math.max(0, wm - target);
-    tot += wm; ext += we;
-    if (weeks.length > 1) lines.push(t('rep_week', { n: isoWeek(mon), r: rangeLabel(mon) }));
-    for (let i = 0; i < 7; i++) {
-      const d = addDays(mon, i), k = keyOf(d);
-      const list = entriesOn(k);
+  for (const p of ps) {
+    if (ps.length > 1) lines.push(t('rep_week', { n: isoWeek(p.mon), r: spanLabel(dateOf(p.a), dateOf(p.b)) }));
+    for (const d of daysOf(p)) {
+      const k = keyOf(d), list = entriesOn(k);
       if (!list.length) continue;
       const spans = list.map(e => `${hhmm(e.start)}–${e.end ? hhmm(e.end) : t('now')}`).join(', ');
-      const dn = fmt({ weekday: 'short' }, d).replace('.', '');
-      lines.push(`${dn} ${d.getDate()}/${d.getMonth() + 1}  ${spans}  →  ${fmtHM(dayMins(k))}${db.notes[k] ? `  (${db.notes[k]})` : ''}`);
+      const x = dayExtra(k);
+      lines.push(`${fmt({ weekday: 'short' }, d).replace('.', '')} ${d.getDate()}/${d.getMonth() + 1}  ${spans}  →  ${fmtHM(dayMins(k))}${x >= 0.5 ? ` · ${t('rep_extra_w', { t: fmtHM(x) })}` : ''}${db.notes[k] ? `  (${db.notes[k]})` : ''}`);
     }
-    if (weeks.length > 1) lines.push(`${t('rep_week_tot', { t: fmtHM(wm) })}${we ? ` (${t('rep_extra_w', { t: fmtHM(we) })})` : ''}`, '');
+    tot += p.worked; ext += p.extra;
+    if (ps.length > 1) lines.push(`${t('rep_week_tot', { t: fmtHM(p.worked) })}${p.extra >= 0.5 ? ` (${t('rep_extra_w', { t: fmtHM(p.extra) })})` : ''}`, '');
   }
-  if (weeks.length === 1) lines.push('');
-  lines.push(t('rep_total', { t: fmtHM(tot), p: fmtHM(target * weeks.length) }));
-  lines.push(ext ? t('rep_extra', { t: fmtHM(ext) }) : t('rep_noextra'));
+  if (ps.length <= 1) lines.push('');
+  lines.push(scope === 'week' ? t('rep_total', { t: fmtHM(tot), p: fmtHM(weekTarget(ui.week)) }) : t('rep_total_m', { t: fmtHM(tot) }));
+  lines.push(ext >= 0.5 ? t('rep_extra', { t: fmtHM(ext) }) : t('rep_noextra'));
+  if (exps.length) {
+    lines.push('', `${t('expenses')}:`);
+    for (const x of exps) {
+      const d = dateOf(x.date);
+      lines.push(`${d.getDate()}/${d.getMonth() + 1}  ${expLabel(x)}${x.kind === 'km' ? ` · ${fmtNum(expKm(x))} km` : ''}  →  ${fmtEUR(expAmount(x))}`);
+    }
+    lines.push(t('rep_exp_tot', { t: fmtEUR(exps.reduce((s, x) => s + expAmount(x), 0)) }));
+  }
+  if (scope === 'month') lines.push('', t('rep_owed', { t: fmtEUR(monthData(ui.month.y, ui.month.m).owed) }));
   return lines.join('\n');
 }
 
+/* CSV amb les mateixes columnes que el full de registre */
 function reportCSV(scope) {
-  const { weeks } = reportWeeks(scope);
-  const target = db.settings.weekly;
-  const dec = m => (m / 60).toFixed(2).replace('.', ',');
-  const q = v => /[";\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v;
-  const out = [L.csv_head.join(';')];
+  const { periods: ps, exps } = reportScope(scope);
+  const dec = m => (m >= 0.5 ? (m / 60).toFixed(2).replace('.', ',') : '');
+  const eur = v => v.toFixed(2).replace('.', ',');
+  const q = v => (/[";\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v);
   const dmy = d => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-  for (const mon of weeks) {
-    for (let i = 0; i < 7; i++) {
-      const d = addDays(mon, i), k = keyOf(d);
-      for (const e of entriesOn(k)) {
-        const mm = minsOf(e);
-        out.push([dmy(d), fmt({ weekday: 'long' }, d), isoWeek(d), hhmm(e.start), e.end ? hhmm(e.end) : '', fmtClock(mm), dec(mm), q(db.notes[k] || '')].join(';'));
-      }
+  const out = [L.csv_head.join(';')];
+  let tot = 0, ext = 0;
+  for (const p of ps) {
+    for (const d of daysOf(p)) {
+      const k = keyOf(d), mins = dayMins(k);
+      if (!mins && !db.notes[k]) continue;
+      const sl = daySlots(k);
+      const col = (list, end) => list.map(e => (end ? (e.end ? clockAt(k, e.end) : '') : clockAt(k, e.start))).join(' / ');
+      const x = dayExtra(k);
+      tot += mins; ext += x;
+      out.push([dmy(d), fmt({ weekday: 'long' }, d), col(sl.mati), col(sl.mati, 1), col(sl.tarda), col(sl.tarda, 1), col(sl.nit), col(sl.nit, 1), dec(mins), dec(x), q(db.notes[k] || '')].join(';'));
     }
   }
-  out.push('', L.csv_weeks, [L.csv_week, L.csv_from, L.csv_to, L.csv_tot, L.csv_plan, L.csv_ext].join(';'));
-  for (const mon of weeks) {
-    const wm = weekMins(mon);
-    out.push([isoWeek(mon), dmy(mon), dmy(addDays(mon, 6)), dec(wm), dec(target), dec(Math.max(0, wm - target))].join(';'));
+  out.push([L.csv_tot, '', '', '', '', '', '', '', dec(tot), dec(ext), ''].join(';'));
+  if (exps.length) {
+    out.push('', L.csv_exp, L.csv_exp_head.join(';'));
+    for (const x of exps) out.push([dmy(dateOf(x.date)), q(expLabel(x)), x.kind === 'km' ? fmtNum(expKm(x)) : '', eur(expAmount(x))].join(';'));
+    out.push([L.csv_tot, '', fmtNum(exps.reduce((s, x) => s + expKm(x), 0)), eur(exps.reduce((s, x) => s + expAmount(x), 0))].join(';'));
   }
-  return '﻿' + out.join('\r\n');
+  return '\ufeff' + out.join('\r\n');
 }
 
 function fileStamp(scope) {
-  const { weeks } = reportWeeks(scope);
-  if (scope === 'week') return `${weeks[0].getFullYear()}-S${pad(isoWeek(weeks[0]))}`;
+  if (scope === 'week') return `${ui.week.getFullYear()}-S${pad(isoWeek(ui.week))}`;
   return `${ui.month.y}-${pad(ui.month.m + 1)}`;
 }
-function slug(s) { return (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '-').replace(/^-|-$/g, ''); }
+function slug(s) { return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w]+/g, '-').replace(/^-|-$/g, ''); }
 
 function shareReport(scope) {
   actionSheet([
     { label: t('sh_text'), fn: () => shareText(reportText(scope)) },
-    { label: t('sh_csv'), fn: () => shareFile(`Jornada-${slug(db.settings.name) || 'registro'}-${fileStamp(scope)}.csv`, 'text/csv', reportCSV(scope)) },
+    { label: t('sh_csv'), fn: () => shareFile(`Jornada-${slug(db.settings.name) || 'registre'}-${fileStamp(scope)}.csv`, 'text/csv', reportCSV(scope)) },
     { label: t('sh_copy'), fn: async () => { try { await navigator.clipboard.writeText(reportText(scope)); toast(t('copied')); } catch { shareText(reportText(scope)); } } },
   ]);
+}
+
+/* ---------- registre mensual en PDF (jsPDF i pdf.js es carreguen quan cal) ---------- */
+
+const BASE = (document.currentScript?.src || location.href).replace(/[^/]*$/, '');
+let pdfLib = null;
+function loadScript(src) {
+  return new Promise((ok, ko) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = ko; document.head.append(el); });
+}
+function loadPDF() {
+  pdfLib ||= loadScript(BASE + 'vendor/jspdf.umd.min.js').then(() => loadScript(BASE + 'pdf.js')).catch(e => { pdfLib = null; throw e; });
+  return pdfLib;
+}
+async function sendPDF() {
+  const { y, m } = ui.month;
+  const ready = !!window.registrePDF;
+  try { if (!ready) await loadPDF(); } catch { return dialog({ title: t('pdf_err'), buttons: [{ label: 'OK' }] }); }
+  const who = (db.settings.name || '').trim();
+  const name = `Registre ${fmt({ month: 'long' }, new Date(y, m, 1))} ${y}${who ? ' - ' + who : ''}.pdf`;
+  const blob = registrePDF(y, m);
+  // si s'ha hagut de carregar, el toc original ja ha caducat i compartir necessita un toc nou
+  if (!ready && !(await dialog({ title: t('pdf_ready'), buttons: [{ label: t('cancel'), value: false }, { label: t('share'), value: true, strong: true }] }))) return;
+  shareFile(name, 'application/pdf', blob);
 }
 
 async function shareText(text) {
@@ -850,11 +1061,20 @@ async function importFile(file) {
   let d;
   try { d = normalize(JSON.parse(await file.text())); } catch { d = null; }
   if (!d) return dialog({ title: t('import_bad'), buttons: [{ label: 'OK' }] });
+  const ids = new Set(db.entries.map(e => e.id)), xids = new Set(db.expenses.map(x => x.id));
+  const clash = e => db.entries.some(o => o.start < (e.end ?? Infinity) && e.start < (o.end ?? Infinity));
+  const add = d.entries.filter(e => !ids.has(e.id) && !clash(e));
+  const addX = d.expenses.filter(x => !xids.has(x.id));
+  if (!add.length && !addX.length) return dialog({ title: t('import_none'), buttons: [{ label: 'OK' }] });
   const when = d.updatedAt ? `${fmt({ day: 'numeric', month: 'short', year: 'numeric' }, d.updatedAt)}` : file.name;
-  const ok = await dialog({ title: t('import_q'), message: t('import_msg', { a: db.entries.length, b: d.entries.length, d: when }), buttons: [{ label: t('cancel'), value: false }, { label: t('restore'), value: true, strong: true }] });
+  const ok = await dialog({ title: t('import_q'), message: t('import_msg', { a: add.length, b: addX.length, d: when }), buttons: [{ label: t('cancel'), value: false }, { label: t('restore'), value: true, strong: true }] });
   if (!ok) return;
   lsSet(KEY + '-antes-de-restaurar', JSON.stringify(db));
-  db = d; save(); render(); toast(t('import_ok'));
+  db.entries.push(...add);
+  db.expenses.push(...addX);
+  for (const [k, v] of Object.entries(d.notes)) if (!db.notes[k]) db.notes[k] = v;
+  db.settings = { ...db.settings, ...d.settings, lastBackup: db.settings.lastBackup };
+  save(); render(); toast(t('import_ok'));
 }
 
 async function erase() {
@@ -976,6 +1196,8 @@ document.addEventListener('click', e => {
   if (d.tab) return go(d.tab);
   if (d.act) return act(d.act);
   if (d.share) return shareReport(d.share);
+  if (d.pdf) return sendPDF();
+  if (d.exp) return openExpense(d.exp === 'new' ? null : d.exp);
   if (d.week) { ui.week = addDays(ui.week, 7 * +d.week); haptic(); return render(); }
   if (d.month) {
     const n = new Date(ui.month.y, ui.month.m + +d.month, 1);
@@ -996,7 +1218,9 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const k = e.target.dataset.set;
   if (k) {
-    db.settings[k] = e.target.value.trim();
+    const type = e.target.dataset.type, v = e.target.value;
+    db.settings[k] = type === 'num' ? parseNum(v) : type === 'date' ? (isKey(v) ? v : null) : v.trim();
+    if (type === 'num') e.target.value = fmtNum(db.settings[k]);
     save();
   }
   if (e.target.id === 'f-import' && e.target.files[0]) { importFile(e.target.files[0]); e.target.value = ''; }
